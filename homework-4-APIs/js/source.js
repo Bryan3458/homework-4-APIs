@@ -14,7 +14,7 @@ function convertMsToMinSec(ms) {
 
 // IDs and secret token should come from Spotify
 localStorage.setItem("artist_id", "6s5ubAp65wXoTZefE01RNR");
-localStorage.setItem("access_token", "BQDjc9xnSZV6VOTFZuAz38mhTRopiCF6tNvO-hphc2BR2nJ2gVkGfjm4kG9aT2ffB7CUI8Bbv7bCWoRhnXVM2ttnMiMCgz9PDtfrdUiPq8KwctaCNgZPQzIM0km8RU6c5t3WuEc38V9w");
+localStorage.setItem("access_token", "BQD_4nW8r0t8jDU0nW65K1oBKobAH2idh-H-y951hyKbh4jE2ParznDju6c5MuPyQGFOiZM40_AutH7L5mOoeZiNbyfj1Y5YLQFTuaU_hhzzNe1p_3RToMJ3KcIIRnMkmXyxJhpPyQoJ");
 localStorage.setItem("track_id_1", "4sZGa0UXFc9Ako9Q0Sc9vk");
 localStorage.setItem("track_id_2", "6Fbd6cx4TVaMm8xcsAsAfi");
 localStorage.setItem("track_id_3", "3Aiv0FNUvnLphXvUFSVVD2");
@@ -93,6 +93,28 @@ document.querySelectorAll(".track-album")[2].textContent = track3.album.name;
 document.querySelectorAll(".track img")[2].src = track3.album.images[0].url;
 document.querySelectorAll(".track-number")[2].textContent = track3.track_number;
 document.querySelectorAll(".track-duration")[2].textContent = convertMsToMinSec(track3.duration_ms);
+
+const albumResponse = await fetch(
+    `https://api.spotify.com/v1/artists/${artistID}/albums?include_groups=album,single&limit=4`,
+    {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        }
+    }
+);
+
+const albums = await albumResponse.json();
+console.log(albums);
+
+const albumCards = document.querySelectorAll(".album-card");
+
+for (let i = 0; i < 4; i++) {
+    const album = albums.items[i];
+
+    albumCards[i].querySelector("img").src = album.images[0].url;
+    albumCards[i].querySelector("h3").textContent = album.name;
+    albumCards[i].querySelector("p").textContent = album.release_date + " • " + album.album_type;
+}
 
 }
 load();
